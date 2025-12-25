@@ -10,7 +10,13 @@ export function buildSVG({
   avatarBase64: string | null;
 }) {
   return `
-<svg width="780" height="260" xmlns="http://www.w3.org/2000/svg">
+<svg
+  width="780"
+  height="260"
+  viewBox="0 0 780 260"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
   <defs>
     <linearGradient id="darkBorder" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#44475A"/>
@@ -35,13 +41,17 @@ export function buildSVG({
   ${
     avatarBase64
       ? `<image
-            href="${avatarBase64}"
-            x="66" y="31" width="88" height="88"
+            xlink:href="${avatarBase64}"
+            x="66"
+            y="31"
+            width="88"
+            height="88"
             clip-path="url(#avatarClip)"
+            preserveAspectRatio="xMidYMid slice"
           />`
       : ""
   }
-      
+
   <text x="180" y="48" class="title">GitHub Stats</text>
   <text x="180" y="76" class="username">@${user.login}</text>
   <text x="180" y="100" class="sub muted">
