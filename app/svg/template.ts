@@ -1,6 +1,6 @@
 import { svgStyle } from "./style";
 
-export function buildSVG({ avatarBase64, user, stats, rows }: any) {
+export function buildSVG({ user, rows }: any) {
   return `
 <svg width="780" height="260" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -24,12 +24,11 @@ export function buildSVG({ avatarBase64, user, stats, rows }: any) {
 
   <circle cx="110" cy="75" r="48" fill="#44475A" stroke="#6272A4" stroke-width="2"/>
 
-  ${
-    avatarBase64
-      ? `<image href="${avatarBase64}" x="66" y="31" width="88" height="88" clip-path="url(#avatarClip)"/>`
-      : ""
-  }
-
+ <image href="${user.avatar_url.replace(
+   /\?.*$/,
+   ""
+ )}" x="66" y="31" width="88" height="88" clip-path="url(#avatarClip)"/>
+      
   <text x="180" y="48" class="title">GitHub Stats</text>
   <text x="180" y="76" class="username">@${user.login}</text>
   <text x="180" y="100" class="sub muted">
