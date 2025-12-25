@@ -1,5 +1,23 @@
 export const runtime = "edge";
 
+/* =======================
+   HELPERS
+======================= */
+async function fetchAvatarBase64(url: string) {
+  const res = await fetch(url);
+  if (!res.ok) return null;
+
+  const buffer = await res.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+
+  return `data:image/png;base64,${btoa(binary)}`;
+}
+
 export async function GET(
   _: Request,
   context: { params: Promise<{ username: string }> }
@@ -21,6 +39,7 @@ export async function GET(
   }
 
   const user = await userRes.json();
+  const avatarBase64 = await fetchAvatarBase64(user.avatar_url);
 
   /* =======================
      GRAPHQL STATS
@@ -93,6 +112,10 @@ export async function GET(
       <stop offset="50%" stop-color="#6272A4"/>
       <stop offset="100%" stop-color="#44475A"/>
     </linearGradient>
+
+    <clipPath id="avatarClip">
+      <circle cx="110" cy="75" r="44"/>
+    </clipPath>
   </defs>
 
   <style>
@@ -129,22 +152,15 @@ export async function GET(
     stroke-width="1"
   />
 
-  <!-- Avatar -->
-  <defs>
-    <clipPath id="avatar">
-      <circle cx="110" cy="75" r="44"/>
-    </clipPath>
-  </defs>
+  <!-- Avatar ring -->
+  <circle cx="110" cy="75" r="48" fill="#44475A" stroke="#6272A4" stroke-width="2"/>
 
-  <circle cx="110" cy="75" r="48" fill="#44475A" stroke="#6272A4"/>
-  <image
-    href="${user.avatar_url}"
-    x="66"
-    y="31"
-    width="88"
-    height="88"
-    clip-path="url(#avatar)"
-  />
+  <!-- Avatar image -->
+  ${
+    avatarBase64
+      ? `<image href="${avatarBase64}" x="66" y="31" width="88" height="88" clip-path="url(#avatarClip)"/>`
+      : ""
+  }
 
   <!-- Left -->
   <text x="180" y="48" class="title">GitHub Stats</text>
