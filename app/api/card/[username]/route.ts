@@ -72,7 +72,7 @@ export async function GET(
 
     return new Response(svg, {
       headers: {
-        "Content-Type": "image/svg+xml",
+        "Content-Type": "image/svg+xml; charset=utf-8",
         "Cache-Control": "public, max-age=21600",
       },
     });
