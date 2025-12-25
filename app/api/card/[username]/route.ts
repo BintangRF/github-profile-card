@@ -1,3 +1,4 @@
+import { fetchAvatarBase64 } from "@/app/helpers/avatar";
 import { fetchGitHubStats } from "@/app/helpers/github-graphql";
 import { fetchGitHubUser } from "@/app/helpers/github-rest";
 import {
@@ -27,6 +28,7 @@ export async function GET(
     ======================= */
     const user = await fetchGitHubUser(username);
     const gql = await fetchGitHubStats(username);
+    const avatarBase64 = await fetchAvatarBase64(user.avatar_url);
 
     /* =======================
        AGGREGATE STATS
@@ -68,6 +70,7 @@ export async function GET(
     const svg = buildSVG({
       user,
       rows,
+      avatarBase64,
     });
 
     return new Response(svg, {
