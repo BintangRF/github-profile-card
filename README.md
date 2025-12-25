@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GitHub Stats SVG (Edge Function)
 
-## Getting Started
+Custom GitHub profile stats berbasis **SVG + Edge Function**, dirender langsung di README menggunakan URL endpoint.
+Menggunakan **GitHub REST + GraphQL API** dan **Dracula dark theme**.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📌 Tujuan
+
+- Menampilkan statistik GitHub **tanpa frontend**
+- Ringan, cepat, dan **compatible dengan GitHub README**
+- Mudah dikustomisasi (warna, layout, data)
+
+---
+
+## ⚙️ Teknologi
+
+- **Next.js App Router**
+- **Edge Runtime**
+- **GitHub REST API**
+- **GitHub GraphQL API**
+- **Pure SVG (no JS, no CSS external)**
+
+---
+
+## 🔐 Environment Variable
+
+Wajib set token GitHub agar tidak kena rate limit.
+
+```env
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> Token hanya butuh akses **public data**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧩 Endpoint
 
-## Learn More
+```txt
+/api/card/{username}
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Contoh
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```md
+![GitHub Stats](https://your-domain.vercel.app/api/card/username)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📊 Data yang Ditampilkan
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Total Public Repositories
+- Total Stars (akumulasi)
+- Total Forks (akumulasi)
+- Total Commits
+- Total Pull Requests
+- Total Merged PRs
+- Total Issues
+- Contributions (last year)
+- Followers & Following
+- Avatar & Username
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🎨 Design
+
+- Theme: **Dracula (dark, low-contrast)**
+- Subtle border (no glow berlebihan)
+- SVG icon inline (Feather-style)
+- Aman untuk GitHub Markdown renderer
+
+---
+
+## 🧠 Catatan Teknis Penting
+
+- GraphQL `repositories(first: 100)` **hanya ambil 100 repo**
+- User dengan repo >100 **tidak terhitung full**
+- Contributions tergantung data GitHub (bukan real-time)
+
+---
+
+## 📝 TODO / Pengingat Update ke Depan
+
+> **Jangan lupa ini kalau balik ke project ini nanti**
+
+- [ ] Pagination GraphQL untuk repo >100
+- [ ] Mode `compact` / `full` via query param
+- [ ] Theme switch (`dark`, `dracula`, `mono`)
+- [ ] Cache strategy (etag / conditional request)
+- [ ] Optional: badge-only version
+- [ ] Optional: hide stats jika value = 0
+- [ ] Optional: locale / language support
+
+---
+
+## ⚠️ Known Limitations
+
+- Tidak bisa pakai React / FE
+- SVG tidak support external JS / CSS
+- Rate limit tetap ada kalau endpoint sering di-hit
+
+---
+
+## 🧪 Testing
+
+- Test langsung via browser
+- Test render di GitHub README
+- Test tanpa token (harus error)
+
+---
+
+## 📦 Deployment
+
+Direkomendasikan:
+
+- **Vercel (Edge Function)**
+- Cloudflare Workers (alternatif)
