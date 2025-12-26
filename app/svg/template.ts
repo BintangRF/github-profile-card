@@ -52,7 +52,7 @@ export function buildSVG({
       : ""
   }
 
-  <text x="180" y="48" class="title">GitHub Stats</text>
+  <text x="180" y="48" class="title">My GitHub Stats</text>
   <text x="180" y="76" class="username">@${user.login}</text>
   <text x="180" y="100" class="sub muted">
     ${user.followers} Followers · ${user.following} Following

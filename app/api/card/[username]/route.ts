@@ -1,4 +1,5 @@
 import { fetchAvatarBase64 } from "@/app/helpers/avatar";
+import { formatJSONNumbers } from "@/app/helpers/format-number";
 import { fetchGitHubStats } from "@/app/helpers/github-graphql";
 import { fetchGitHubUser } from "@/app/helpers/github-rest";
 import {
@@ -26,29 +27,41 @@ export async function GET(
     /* =======================
        FETCH DATA
     ======================= */
-    const user = await fetchGitHubUser(username);
+    const getUser = await fetchGitHubUser(username);
+    const user = formatJSONNumbers(getUser);
     const gql = await fetchGitHubStats(username);
     const avatarBase64 = await fetchAvatarBase64(user.avatar_url);
 
     /* =======================
        AGGREGATE STATS
     ======================= */
-    const stars = gql.repositories.nodes.reduce(
-      (sum: number, r: any) => sum + r.stargazerCount,
-      0
+    const stars = formatJSONNumbers(
+      gql.repositories.nodes.reduce(
+        (sum: number, r: any) => sum + r.stargazerCount,
+        0
+      )
     );
 
-    const forks = gql.repositories.nodes.reduce(
-      (sum: number, r: any) => sum + r.forkCount,
-      0
+    const forks = formatJSONNumbers(
+      gql.repositories.nodes.reduce(
+        (sum: number, r: any) => sum + r.forkCount,
+        0
+      )
     );
 
-    const commits = gql.contributionsCollection.totalCommitContributions;
-    const prs = gql.contributionsCollection.totalPullRequestContributions;
-    const mergedPRs = gql.pullRequests.totalCount;
-    const issues = gql.contributionsCollection.totalIssueContributions;
-    const contributed =
-      gql.contributionsCollection.contributionCalendar.totalContributions;
+    const commits = formatJSONNumbers(
+      gql.contributionsCollection.totalCommitContributions
+    );
+    const prs = formatJSONNumbers(
+      gql.contributionsCollection.totalPullRequestContributions
+    );
+    const mergedPRs = formatJSONNumbers(gql.pullRequests.totalCount);
+    const issues = formatJSONNumbers(
+      gql.contributionsCollection.totalIssueContributions
+    );
+    const contributed = formatJSONNumbers(
+      gql.contributionsCollection.contributionCalendar.totalContributions
+    );
 
     /* =======================
        BUILD STAT ROWS
