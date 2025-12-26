@@ -1,3 +1,4 @@
+import { formatJSONNumbers } from "../helpers/format-number";
 import { svgStyle } from "./style";
 
 export function buildSVG({
@@ -55,7 +56,9 @@ export function buildSVG({
   <text x="180" y="48" class="title">My GitHub Stats</text>
   <text x="180" y="76" class="username">@${user.login}</text>
   <text x="180" y="100" class="sub muted">
-    ${user.followers} Followers · ${user.following} Following
+    ${formatJSONNumbers(user.followers)} Followers · ${formatJSONNumbers(
+    user.following
+  )} Following
   </text>
 
   <line x1="380" y1="32" x2="380" y2="228" stroke="#44475A"/>

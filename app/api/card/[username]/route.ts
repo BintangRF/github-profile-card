@@ -27,8 +27,7 @@ export async function GET(
     /* =======================
        FETCH DATA
     ======================= */
-    const getUser = await fetchGitHubUser(username);
-    const user = formatJSONNumbers(getUser);
+    const user = await fetchGitHubUser(username);
     const gql = await fetchGitHubStats(username);
     const avatarBase64 = await fetchAvatarBase64(user.avatar_url);
 
@@ -67,7 +66,12 @@ export async function GET(
        BUILD STAT ROWS
     ======================= */
     const rows = [
-      statRow(0, repoIcon(), "Total Repositories", user.public_repos),
+      statRow(
+        0,
+        repoIcon(),
+        "Total Repositories",
+        formatJSONNumbers(user.public_repos)
+      ),
       statRow(28, starIcon(), "Stars Count", stars),
       statRow(56, forkIcon(), "Forks Count", forks),
       statRow(84, commitIcon(), "Commits Count", commits),
